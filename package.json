@@ -2,13 +2,24 @@
   "name": "uport-lite",
   "version": "0.1.1",
   "description": "Lightweight library for looking up public profiles on uport-registry",
-  "main": "src/index.js",
-  "repository": {},
+  "main": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uport-project/uport-lite.git"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "build": "node_modules/.bin/browserify src/index.js -o dist/uport-lite.js -t [ babelify --presets [ es2015 react ] ]"
+    "build:es5": "./node_modules/.bin/babel src -d lib",
+    "build:browser": "./node_modules/.bin/webpack --config webpack.config.js",
+    "build:min": "yarn build:browser && node_modules/.bin/google-closure-compiler-js --compilationLevel simple dist/uport-lite.js >  dist/uport-lite.min.js ",
+    "build": "yarn test && yarn build:es5 && yarn build:min"
   },
   "dependencies": {
     "base-x": "^2.0.3",
@@ -22,11 +33,9 @@
     "babel-jest": "^18.0.0",
     "babel-polyfill": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
-    "babel-preset-es2015-rollup": "^3.0.0",
-    "babel-preset-react": "^6.22.0",
-    "babelify": "^7.3.0",
-    "browserify": "^14.0.0",
+    "google-closure-compiler-js": "^20170124.0.0",
     "jest": "^18.1.0",
-    "standard": "^8.6.0"
+    "standard": "^8.6.0",
+    "webpack": "beta"
   }
 }

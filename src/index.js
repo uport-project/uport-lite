@@ -12,7 +12,6 @@ if (typeof window !== 'undefined' && window.XMLHttpRequest) {
 }
 
 const getAttributesData = '0x446d5aa4000000000000000000000000'
-
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
@@ -52,7 +51,7 @@ function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
-function UportLite (opts = {}) {
+export default function UportLite (opts = {}) {
   const registryAddress = opts.registryAddress || '0xb9C1598e24650437a3055F7f66AC1820c419a679'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
@@ -91,4 +90,3 @@ function UportLite (opts = {}) {
   return getAttributes
 }
 
-module.exports = UportLite
