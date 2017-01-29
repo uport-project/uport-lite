@@ -1,25 +1,32 @@
 {
   "name": "uport-lite",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Lightweight library for looking up public profiles on uport-registry",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": {},
   "author": "Pelle Braendgaard <pelle.braendgaard@consensys.net>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "node_modules/.bin/browserify src/index.js -o dist/uport-lite.js -t [ babelify --presets [ es2015 react ] ]"
   },
   "dependencies": {
-    "bs58": "^4.0.0",
-    "buffer": "^5.0.2",
+    "base-x": "^2.0.3",
     "xmlhttprequest": "^1.8.0"
   },
+  "browser": {
+    "xmlhttprequest": false
+  },
   "devDependencies": {
-    "babel": "^6.5.2",
+    "babel-cli": "^6.22.2",
     "babel-jest": "^18.0.0",
     "babel-polyfill": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
     "babel-preset-react": "^6.22.0",
-    "jest": "^18.1.0"
+    "babelify": "^7.3.0",
+    "browserify": "^14.0.0",
+    "jest": "^18.1.0",
+    "standard": "^8.6.0"
   }
 }
