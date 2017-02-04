@@ -1,6 +1,6 @@
 {
   "name": "uport-lite",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Lightweight library for looking up public profiles on uport-registry",
   "main": "lib/index.js",
   "repository": {
@@ -22,11 +22,12 @@
     "build": "yarn test && yarn build:es5 && yarn build:min"
   },
   "dependencies": {
-    "base-x": "^2.0.3",
+    "base-x": "pelle/base-x#7e1e36c751ef743f94bb08b61412ea2a525ae196",
     "xmlhttprequest": "^1.8.0"
   },
   "browser": {
-    "xmlhttprequest": false
+    "xmlhttprequest": false,
+    "./src/lib/XMLHttpRequest.js": "./src/lib/XMLHttpRequest-browser.js"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
