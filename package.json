@@ -22,7 +22,7 @@
     "build": "yarn test && yarn build:es5 && yarn build:min"
   },
   "dependencies": {
-    "base-x": "pelle/base-x",
+    "base-x": "pelle/base-x#7e1e36c751ef743f94bb08b61412ea2a525ae196",
     "xmlhttprequest": "^1.8.0"
   },
   "browser": {
