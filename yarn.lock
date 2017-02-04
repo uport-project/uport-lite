@@ -658,9 +658,9 @@ balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
 
-base-x@^2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/base-x/-/base-x-2.0.3.tgz#d010aa601a4c97be3667593f8dbe38794612d9e9"
+base-x@pelle/base-x, base-x@pelle/base-x#7e1e36c751ef743f94bb08b61412ea2a525ae196:
+  version "2.0.4"
+  resolved "https://codeload.github.com/pelle/base-x/tar.gz/7e1e36c751ef743f94bb08b61412ea2a525ae196"
 
 base64-js@^1.0.2:
   version "1.2.0"

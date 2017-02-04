@@ -4,7 +4,8 @@ A uPort is an ethereum address representing an identity of a person, thing or ot
 
 A public profile is stored on ipfs at a hash registered in the [uPortRegistry](https://github.com/ConsenSys/uport-registry).
 
-This library aims to let developers look up a profile for a given ethereum address and nothing else.
+This library aims to let developers look up a profile for a given ethereum address and nothing else. It is designed to be tiny (<3k with all dependencies),
+so you can easily add uport functionality to non Ethereum apps.
 
 ## Use
 
