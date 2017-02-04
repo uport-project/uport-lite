@@ -2,14 +2,7 @@ var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = require('base-x')(BASE58)
 var hex = require('base-x')('0123456789abcdef')
 
-let XMLHttpRequest; // eslint-disable-line
-if (typeof window !== 'undefined' && window.XMLHttpRequest) {
-  // browser
-  XMLHttpRequest = window.XMLHttpRequest // eslint-disable-line
-} else {
-  // node
-  XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest // eslint-disable-line
-}
+const XMLHttpRequest = require('./lib/XMLHttpRequest')
 
 const getAttributesData = '0x446d5aa4000000000000000000000000'
 function http (opts, callback) {
@@ -60,6 +53,7 @@ export default function UportLite (opts = {}) {
     if (!address) return callback(null)
     return http({
       uri: rpcUrl,
+      accept: 'application/json',
       data: {
         method: 'eth_call',
         params: [

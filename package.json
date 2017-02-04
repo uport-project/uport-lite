@@ -26,7 +26,8 @@
     "xmlhttprequest": "^1.8.0"
   },
   "browser": {
-    "xmlhttprequest": false
+    "xmlhttprequest": false,
+    "./src/lib/XMLHttpRequest.js": "./src/lib/XMLHttpRequest-browser.js"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
