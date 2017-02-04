@@ -1,5 +1,14 @@
-this["UportLite"] =
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("UportLite", [], factory);
+	else if(typeof exports === 'object')
+		exports["UportLite"] = factory();
+	else
+		root["UportLite"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -203,11 +212,8 @@ module.exports = g;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["default"] = UportLite;
 var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = __webpack_require__(0)(BASE58)
 var hex = __webpack_require__(0)('0123456789abcdef')
@@ -294,7 +300,8 @@ function UportLite (opts = {}) {
   return getAttributes
 }
 
-
+module.exports = UportLite
 
 /***/ })
 /******/ ]);
+});

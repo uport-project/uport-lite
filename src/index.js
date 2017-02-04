@@ -44,7 +44,7 @@ function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
-export default function UportLite (opts = {}) {
+function UportLite (opts = {}) {
   const registryAddress = opts.registryAddress || '0xb9C1598e24650437a3055F7f66AC1820c419a679'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
@@ -84,3 +84,4 @@ export default function UportLite (opts = {}) {
   return getAttributes
 }
 
+module.exports = UportLite
