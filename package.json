@@ -27,7 +27,8 @@
   },
   "browser": {
     "xmlhttprequest": false,
-    "./src/lib/XMLHttpRequest.js": "./src/lib/XMLHttpRequest-browser.js"
+    "./src/lib/XMLHttpRequest.js": "./src/lib/XMLHttpRequest-browser.js",
+    "./lib/lib/XMLHttpRequest.js": "./lib/lib/XMLHttpRequest-browser.js"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
