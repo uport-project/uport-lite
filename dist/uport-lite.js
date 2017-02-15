@@ -178,10 +178,7 @@ module.exports = function base (ALPHABET) {
 /* 1 */
 /***/ (function(module, exports) {
 
-const XMLHttpRequest = window.XMLHttpRequest; // eslint-disable-line
-
-module.exports = XMLHttpRequest;
-
+/* (ignored) */
 
 /***/ }),
 /* 2 */
@@ -218,7 +215,7 @@ var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = __webpack_require__(0)(BASE58)
 var hex = __webpack_require__(0)('0123456789abcdef')
 
-const XMLHttpRequest = __webpack_require__(1)
+const XMLHttpRequest = window.XMLHttpRequest || __webpack_require__(1).XMLHttpRequest
 
 const getAttributesData = '0x446d5aa4000000000000000000000000'
 function http (opts, callback) {
@@ -301,6 +298,7 @@ function UportLite (opts = {}) {
 }
 
 module.exports = UportLite
+
 
 /***/ })
 /******/ ]);
