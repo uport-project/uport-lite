@@ -17,9 +17,9 @@ import UportLite from 'uport-lite'
 // UportLite is just a function returning a function. It is not a Class so don't use `new`
 const registry = UportLite()
 
-registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) =>
+registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) => {
   console.log(profile)
-))
+})
 ```
 
 You can configure it passing options to the function:
@@ -33,7 +33,7 @@ const registry = UportLite({
   rpcUrl: 'https://mainnet.infura.io/INFURA_API_KEY'
 })
 
-registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) =>
+registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) => {
   console.log(profile)
-))
+})
 ```
