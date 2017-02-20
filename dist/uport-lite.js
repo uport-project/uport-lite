@@ -215,7 +215,7 @@ var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = __webpack_require__(0)(BASE58)
 var hex = __webpack_require__(0)('0123456789abcdef')
 
-const XMLHttpRequest = window.XMLHttpRequest || __webpack_require__(1).XMLHttpRequest
+const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : __webpack_require__(1).XMLHttpRequest 
 
 const getAttributesData = '0x446d5aa4000000000000000000000000'
 function http (opts, callback) {
