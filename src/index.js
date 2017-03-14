@@ -4,7 +4,7 @@ var hex = require('base-x-bytearray')('0123456789abcdef')
 
 const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest 
 
-const getAttributesData = '0x446d5aa4000000000000000000000000'
+const functionSignature = '0x447885f0'
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
@@ -44,20 +44,48 @@ function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
+function registryEncodingToIPFS(hexStr) {
+  return base58.encode(hex.decode("1220" + hexStr.slice(2)))
+}
+
 function UportLite (opts = {}) {
-  const registryAddress = opts.registryAddress || '0xb9C1598e24650437a3055F7f66AC1820c419a679'
+  const registryAddress = opts.registryAddress || '0x41566e3a081f5032bdcad470adb797635ddfe1f0'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
 
-  function callRegistry (address, callback) {
-    if (!address) return callback(null)
+  function asciiToHex (string, delim) {
+     return string.split("").map(function(c) {
+         return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
+     }).join(delim || "");
+  };
+
+  function pad(pad, str, padLeft) {
+    if (typeof str === 'undefined') 
+      return pad;
+    if (padLeft) {
+      return (pad + str).slice(-pad.length);
+    } else {
+      return (str + pad).substring(0, pad.length);
+    }
+  }
+  function encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject){
+    var callString =  functionSignature;
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", asciiToHex(registrationIdentifier))
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", issuer.slice(2), true)
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", subject.slice(2), true)
+    return callString
+  }
+
+
+  function callRegistry (registrationIdentifier, issuer, subject, callback) {
+    var callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject)
     return http({
       uri: rpcUrl,
       accept: 'application/json',
       data: {
         method: 'eth_call',
         params: [
-          {to: registryAddress, data: (getAttributesData + address.slice(2))},
+          {to: registryAddress, data: (callString)},
           'latest'
         ],
         id: 1,
@@ -65,8 +93,8 @@ function UportLite (opts = {}) {
       }
     }, (error, response) => {
       if (error) return callback(error)
-      const hexHash = response.result.slice(130).slice(0, 68)
-      return callback(null, toBase58(hexHash))
+      if (response.result == 0) return callback(error)
+      return callback(null, registryEncodingToIPFS(response.result))
     })
   }
 
@@ -75,13 +103,17 @@ function UportLite (opts = {}) {
     return http({uri: `${ipfsGw}${ipfsHash}`}, callback)
   }
 
-  function getAttributes (address, callback) {
-    return callRegistry(address, (error, ipfsHash) => {
+  function get(issuer, callback, subjectAddress, registrationIdentifier) {
+    if (!issuer) return callback(null)
+    var subject = subjectAddress || issuer
+    var registrationIdentifier = registrationIdentifier || "uPortProfileIPFS1220"
+
+    return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
       if (error) return callback(error)
       fetchIpfs(ipfsHash, callback)
     })
   }
-  return getAttributes
+  return get
 }
 
 module.exports = UportLite
