@@ -251,6 +251,10 @@ var hex = __webpack_require__(0)('0123456789abcdef')
 const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : __webpack_require__(2).XMLHttpRequest
 
 const functionSignature = '0x447885f0'
+
+// Legacy
+const getAttributesData = '0x446d5aa4000000000000000000000000'
+
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
@@ -317,6 +321,10 @@ const defaultNetworks = {
   }
 }
 
+function toBase58 (hexStr) {
+  return base58.encode(hex.decode(hexStr))
+}
+
 function UportLite (opts = {}) {
   const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
@@ -344,6 +352,29 @@ function UportLite (opts = {}) {
     callString += pad('0000000000000000000000000000000000000000000000000000000000000000', issuer.slice(2), true)
     callString += pad('0000000000000000000000000000000000000000000000000000000000000000', subject.slice(2), true)
     return callString
+  }
+
+  // TODO remove once feasible
+  function callLegacyRegistry (address, callback) {
+    const rpcUrl = `https://ropsten.infura.io/${infuraKey}`
+    if (!address) return callback(null)
+    return http({
+      uri: rpcUrl,
+      accept: 'application/json',
+      data: {
+        method: 'eth_call',
+        params: [
+          {to: '0xb9C1598e24650437a3055F7f66AC1820c419a679', data: (getAttributesData + address.slice(2))},
+          'latest'
+        ],
+        id: 1,
+        jsonrpc: '2.0'
+      }
+    }, (error, response) => {
+      if (error) return callback(error)
+      const hexHash = response.result.slice(130).slice(0, 68)
+      return callback(null, toBase58(hexHash))
+    })
   }
 
   function callRegistry (registrationIdentifier, issuerId, subjectId, callback) {
@@ -386,10 +417,17 @@ function UportLite (opts = {}) {
     if (!issuer) return callback(null)
     const subject = subjectAddress || issuer
 
-    return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
-      if (error) return callback(error)
-      fetchIpfs(ipfsHash, callback)
-    })
+    if (issuer.match(/0x[0-9a-fA-F]{40}/)) {
+      return callLegacyRegistry(issuer, (error, ipfsHash) => {
+        if (error) return callback(error)
+        fetchIpfs(ipfsHash, callback)
+      })
+    } else {
+      return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
+        if (error) return callback(error)
+        fetchIpfs(ipfsHash, callback)
+      })
+    }
   }
   return get
 }
