@@ -52,7 +52,7 @@ function registryEncodingToIPFS(hexStr) {
 export function eaeDecode (encoded) {
   const data = base58.decode(encoded)
   const netLength = data.length - 24
-  const network = data.slice(0, netLength)
+  const network = data.slice(1, netLength)
   const address = data.slice(netLength, 20 + netLength)
   return {
     network: `0x${hex.encode(network)}`,
