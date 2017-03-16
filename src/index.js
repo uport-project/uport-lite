@@ -107,7 +107,7 @@ function UportLite (opts = {}) {
     const issuer = eaeDecode(issuerId)
     const subject = eaeDecode(subjectId)
     if (issuer.network !== subject.network) {
-      throw new Error('issuer and subject have to be on the same network')
+      throw new Error('Issuer and subject must be on the same network')
     }
     if (!networks[issuer.network]) {
       throw new Error(`Network id ${issuer.network} is not configured`)

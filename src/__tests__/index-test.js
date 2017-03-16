@@ -35,3 +35,25 @@ it('returns null if it profile doesnt exist', () => {
     return expect(profile).toBeUndefined()
   })
 })
+
+it('returns error for unsupported network', () => {
+  return new Promise((resolve, reject) => {
+    registry('5A8bRWU3F7j3REx3vkJWxdjQPp4tqmxFPmab1Tr', (error, profile) => {
+      if (error) return reject(error)
+      resolve(profile)
+    })
+  }).catch(error => {
+    return expect(error.message).toBe('Network id 0x94365e3a is not configured')
+  })
+})
+
+it('returns error if issuer and subject are on different networks', () => {
+  return new Promise((resolve, reject) => {
+    registry('2oVdmcz7BkWozm2JE4hHixRV8s5y3STqhPG', (error, profile) => {
+      if (error) return reject(error)
+      resolve(profile)
+    }, '2nQtiQG6Cgm1GYTBaaKAgr76uY7iSexUkqX', 'uPortProfileIPFS1220')
+  }).catch(error => {
+    return expect(error.message).toBe('Issuer and subject must be on the same network')
+  })
+})
