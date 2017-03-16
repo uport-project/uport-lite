@@ -2,7 +2,7 @@ var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = require('base-x-bytearray')(BASE58)
 var hex = require('base-x-bytearray')('0123456789abcdef')
 
-const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest 
+const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest
 
 const functionSignature = '0x447885f0'
 function http (opts, callback) {
@@ -44,8 +44,8 @@ function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
-function registryEncodingToIPFS(hexStr) {
-  return base58.encode(hex.decode("1220" + hexStr.slice(2)))
+function registryEncodingToIPFS (hexStr) {
+  return base58.encode(hex.decode('1220' + hexStr.slice(2)))
 }
 
 // to avoid adding further dependencies we are not verifying checksum
@@ -80,28 +80,27 @@ function UportLite (opts = {}) {
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
 
   function asciiToHex (string, delim) {
-     return string.split("").map(function(c) {
-         return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
-     }).join(delim || "");
+    return string.split('').map(function (c) {
+       return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(delim || '')
   };
 
-  function pad(pad, str, padLeft) {
-    if (typeof str === 'undefined') 
-      return pad;
+  function pad (pad, str, padLeft) {
+    if (typeof str === 'undefined')
+      {return pad;}
     if (padLeft) {
-      return (pad + str).slice(-pad.length);
+      return (pad + str).slice(-pad.length)
     } else {
-      return (str + pad).substring(0, pad.length);
+      return (str + pad).substring(0, pad.length)
     }
   }
-  function encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject){
-    var callString =  functionSignature;
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", asciiToHex(registrationIdentifier))
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", issuer.slice(2), true)
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", subject.slice(2), true)
+  function encodeFunctionCall (functionSignature, registrationIdentifier, issuer, subject) {
+    var callString = functionSignature
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', asciiToHex(registrationIdentifier))
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', issuer.slice(2), true)
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', subject.slice(2), true)
     return callString
   }
-
 
   function callRegistry (registrationIdentifier, issuerId, subjectId, callback) {
     const issuer = eaeDecode(issuerId)

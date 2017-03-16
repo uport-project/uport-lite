@@ -73,7 +73,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -172,16 +172,46 @@ module.exports = function base (ALPHABET) {
   }
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports) {
 
-/* (ignored) */
+module.exports = function(originalModule) {
+	if(!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
+		// module.parent = undefined by default
+		if(!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function() {
+				return module.i;
+			}
+		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true,
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 var g;
@@ -208,16 +238,19 @@ module.exports = g;
 
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+/* WEBPACK VAR INJECTION */(function(module) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (immutable) */ __webpack_exports__["eaeDecode"] = eaeDecode;
 var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = __webpack_require__(0)(BASE58)
 var hex = __webpack_require__(0)('0123456789abcdef')
 
-const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : __webpack_require__(1).XMLHttpRequest 
+const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : __webpack_require__(2).XMLHttpRequest 
 
-const getAttributesData = '0x446d5aa4000000000000000000000000'
+const functionSignature = '0x447885f0'
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
@@ -257,20 +290,84 @@ function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
-function UportLite (opts = {}) {
-  const registryAddress = opts.registryAddress || '0xb9C1598e24650437a3055F7f66AC1820c419a679'
-  const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
-  const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
+function registryEncodingToIPFS(hexStr) {
+  return base58.encode(hex.decode("1220" + hexStr.slice(2)))
+}
 
-  function callRegistry (address, callback) {
-    if (!address) return callback(null)
+// to avoid adding further dependencies we are not verifying checksum
+function eaeDecode (encoded) {
+  const data = base58.decode(encoded)
+  const netLength = data.length - 24
+  const network = data.slice(1, netLength)
+  const address = data.slice(netLength, 20 + netLength)
+  return {
+    network: `0x${hex.encode(network)}`,
+    address: `0x${hex.encode(address)}`
+  }
+}
+
+const networks = {
+  '0x1': {
+    registry: '0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6',
+    rpcUrl: 'https://mainnet.infura.io'
+  },
+  '0x3': {
+    registry: '0x41566e3a081f5032bdcad470adb797635ddfe1f0',
+    rpcUrl: 'https://ropsten.infura.io'
+  },
+  '0x2a': {
+    registry: '',
+    rpcUrl: 'https://kovan.infura.io'
+  }
+}
+
+function UportLite (opts = {}) {
+  const infuraKey = opts.infuraKey || 'uport-lite-library'
+  const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
+
+  function asciiToHex (string, delim) {
+     return string.split("").map(function(c) {
+         return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
+     }).join(delim || "");
+  };
+
+  function pad(pad, str, padLeft) {
+    if (typeof str === 'undefined') 
+      return pad;
+    if (padLeft) {
+      return (pad + str).slice(-pad.length);
+    } else {
+      return (str + pad).substring(0, pad.length);
+    }
+  }
+  function encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject){
+    var callString =  functionSignature;
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", asciiToHex(registrationIdentifier))
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", issuer.slice(2), true)
+    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", subject.slice(2), true)
+    return callString
+  }
+
+
+  function callRegistry (registrationIdentifier, issuerId, subjectId, callback) {
+    const issuer = eaeDecode(issuerId)
+    const subject = eaeDecode(subjectId)
+    if (issuer.network !== subject.network) {
+      throw new Error('Issuer and subject must be on the same network')
+    }
+    if (!networks[issuer.network]) {
+      throw new Error(`Network id ${issuer.network} is not configured`)
+    }
+    const rpcUrl = networks[issuer.network].rpcUrl
+    const registryAddress = networks[issuer.network].registry
+    const callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer.address, subject.address)
     return http({
       uri: rpcUrl,
       accept: 'application/json',
       data: {
         method: 'eth_call',
         params: [
-          {to: registryAddress, data: (getAttributesData + address.slice(2))},
+          {to: registryAddress, data: (callString)},
           'latest'
         ],
         id: 1,
@@ -278,8 +375,8 @@ function UportLite (opts = {}) {
       }
     }, (error, response) => {
       if (error) return callback(error)
-      const hexHash = response.result.slice(130).slice(0, 68)
-      return callback(null, toBase58(hexHash))
+      if (response.result == 0) return callback(error)
+      return callback(null, registryEncodingToIPFS(response.result))
     })
   }
 
@@ -288,17 +385,21 @@ function UportLite (opts = {}) {
     return http({uri: `${ipfsGw}${ipfsHash}`}, callback)
   }
 
-  function getAttributes (address, callback) {
-    return callRegistry(address, (error, ipfsHash) => {
+  function get (issuer, callback, subjectAddress, registrationIdentifier = 'uPortProfileIPFS1220') {
+    if (!issuer) return callback(null)
+    const subject = subjectAddress || issuer
+
+    return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
       if (error) return callback(error)
       fetchIpfs(ipfsHash, callback)
     })
   }
-  return getAttributes
+  return get
 }
 
 module.exports = UportLite
 
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(1)(module)))
 
 /***/ })
 /******/ ]);
