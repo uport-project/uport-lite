@@ -56,7 +56,7 @@ export function eaeDecode (encoded) {
   }
 }
 
-const networks = {
+const defaultNetworks = {
   '0x1': {
     registry: '0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6',
     rpcUrl: 'https://mainnet.infura.io'
@@ -74,7 +74,7 @@ const networks = {
 function UportLite (opts = {}) {
   const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
-
+  const networks = opts.networks ? Object.assign({}, defaultNetworks, opts.networks) : defaultNetworks
   function asciiToHex (string, delim) {
     return string.split('').map(function (c) {
       return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
