@@ -115,7 +115,7 @@ function UportLite (opts = {}) {
     const registryAddress = networks[issuer.network].registry
     const callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer.address, subject.address)
     return http({
-      uri: rpcUrl,
+      uri: `${rpcUrl}/${infuraKey}`,
       accept: 'application/json',
       data: {
         method: 'eth_call',
