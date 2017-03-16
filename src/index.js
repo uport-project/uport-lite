@@ -48,10 +48,36 @@ function registryEncodingToIPFS(hexStr) {
   return base58.encode(hex.decode("1220" + hexStr.slice(2)))
 }
 
+// to avoid adding further dependencies we are not verifying checksum
+export function eaeDecode (encoded) {
+  const data = base58.decode(encoded)
+  const netLength = data.length - 24
+  const network = data.slice(0, netLength)
+  const address = data.slice(netLength, 20 + netLength)
+  return {
+    network: `0x${hex.encode(network)}`,
+    address: `0x${hex.encode(address)}`
+  }
+}
+
+const networks = {
+  '0x1': {
+    registry: '0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6',
+    rpcUrl: 'https://mainnet.infura.io'
+  },
+  '0x3': {
+    registry: '0x41566e3a081f5032bdcad470adb797635ddfe1f0',
+    rpcUrl: 'https://ropsten.infura.io'
+  },
+  '0x2a': {
+    registry: '',
+    rpcUrl: 'https://kovan.infura.io'
+  }
+}
+
 function UportLite (opts = {}) {
-  const registryAddress = opts.registryAddress || '0x41566e3a081f5032bdcad470adb797635ddfe1f0'
+  const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
-  const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
 
   function asciiToHex (string, delim) {
      return string.split("").map(function(c) {
@@ -77,8 +103,18 @@ function UportLite (opts = {}) {
   }
 
 
-  function callRegistry (registrationIdentifier, issuer, subject, callback) {
-    var callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject)
+  function callRegistry (registrationIdentifier, issuerId, subjectId, callback) {
+    const issuer = eaeDecode(issuerId)
+    const subject = eaeDecode(subjectId)
+    if (issuer.network !== subject.network) {
+      throw new Error('issuer and subject have to be on the same network')
+    }
+    if (!networks[issuer.network]) {
+      throw new Error(`Network id ${issuer.network} is not configured`)
+    }
+    const rpcUrl = networks[issuer.network].rpcUrl
+    const registryAddress = networks[issuer.network].registry
+    const callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer.address, subject.address)
     return http({
       uri: rpcUrl,
       accept: 'application/json',
@@ -103,10 +139,9 @@ function UportLite (opts = {}) {
     return http({uri: `${ipfsGw}${ipfsHash}`}, callback)
   }
 
-  function get(issuer, callback, subjectAddress, registrationIdentifier) {
+  function get (issuer, callback, subjectAddress, registrationIdentifier = 'uPortProfileIPFS1220') {
     if (!issuer) return callback(null)
-    var subject = subjectAddress || issuer
-    var registrationIdentifier = registrationIdentifier || "uPortProfileIPFS1220"
+    const subject = subjectAddress || issuer
 
     return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
       if (error) return callback(error)
