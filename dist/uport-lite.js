@@ -286,10 +286,6 @@ function http (opts, callback) {
   }
 }
 
-function toBase58 (hexStr) {
-  return base58.encode(hex.decode(hexStr))
-}
-
 function registryEncodingToIPFS (hexStr) {
   return base58.encode(hex.decode('1220' + hexStr.slice(2)))
 }
@@ -327,19 +323,21 @@ function UportLite (opts = {}) {
 
   function asciiToHex (string, delim) {
     return string.split('').map(function (c) {
-       return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
+      return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
     }).join(delim || '')
-  };
+  }
 
   function pad (pad, str, padLeft) {
-    if (typeof str === 'undefined')
-      {return pad;}
+    if (typeof str === 'undefined') {
+      return pad
+    }
     if (padLeft) {
       return (pad + str).slice(-pad.length)
     } else {
       return (str + pad).substring(0, pad.length)
     }
   }
+
   function encodeFunctionCall (functionSignature, registrationIdentifier, issuer, subject) {
     var callString = functionSignature
     callString += pad('0000000000000000000000000000000000000000000000000000000000000000', asciiToHex(registrationIdentifier))
