@@ -2,9 +2,13 @@ var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 var base58 = require('base-x-bytearray')(BASE58)
 var hex = require('base-x-bytearray')('0123456789abcdef')
 
-const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest 
+const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest
 
 const functionSignature = '0x447885f0'
+
+// Legacy
+const getAttributesData = '0x446d5aa4000000000000000000000000'
+
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
@@ -40,47 +44,107 @@ function http (opts, callback) {
   }
 }
 
+function registryEncodingToIPFS (hexStr) {
+  return base58.encode(hex.decode('1220' + hexStr.slice(2)))
+}
+
+// to avoid adding further dependencies we are not verifying checksum
+export function eaeDecode (encoded) {
+  const data = base58.decode(encoded)
+  const netLength = data.length - 24
+  const network = data.slice(1, netLength)
+  const address = data.slice(netLength, 20 + netLength)
+  return {
+    network: `0x${hex.encode(network)}`,
+    address: `0x${hex.encode(address)}`
+  }
+}
+
+const defaultNetworks = {
+  '0x1': {
+    registry: '0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6',
+    rpcUrl: 'https://mainnet.infura.io'
+  },
+  '0x3': {
+    registry: '0x41566e3a081f5032bdcad470adb797635ddfe1f0',
+    rpcUrl: 'https://ropsten.infura.io'
+  },
+  '0x2a': {
+    registry: '',
+    rpcUrl: 'https://kovan.infura.io'
+  }
+}
+
 function toBase58 (hexStr) {
   return base58.encode(hex.decode(hexStr))
 }
 
-function registryEncodingToIPFS(hexStr) {
-  return base58.encode(hex.decode("1220" + hexStr.slice(2)))
-}
-
 function UportLite (opts = {}) {
-  const registryAddress = opts.registryAddress || '0x41566e3a081f5032bdcad470adb797635ddfe1f0'
+  const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
-  const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
-
+  const networks = opts.networks ? Object.assign({}, defaultNetworks, opts.networks) : defaultNetworks
   function asciiToHex (string, delim) {
-     return string.split("").map(function(c) {
-         return ("0" + c.charCodeAt(0).toString(16)).slice(-2);
-     }).join(delim || "");
-  };
+    return string.split('').map(function (c) {
+      return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
+    }).join(delim || '')
+  }
 
-  function pad(pad, str, padLeft) {
-    if (typeof str === 'undefined') 
-      return pad;
+  function pad (pad, str, padLeft) {
+    if (typeof str === 'undefined') {
+      return pad
+    }
     if (padLeft) {
-      return (pad + str).slice(-pad.length);
+      return (pad + str).slice(-pad.length)
     } else {
-      return (str + pad).substring(0, pad.length);
+      return (str + pad).substring(0, pad.length)
     }
   }
-  function encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject){
-    var callString =  functionSignature;
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", asciiToHex(registrationIdentifier))
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", issuer.slice(2), true)
-    callString += pad("0000000000000000000000000000000000000000000000000000000000000000", subject.slice(2), true)
+
+  function encodeFunctionCall (functionSignature, registrationIdentifier, issuer, subject) {
+    var callString = functionSignature
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', asciiToHex(registrationIdentifier))
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', issuer.slice(2), true)
+    callString += pad('0000000000000000000000000000000000000000000000000000000000000000', subject.slice(2), true)
     return callString
   }
 
-
-  function callRegistry (registrationIdentifier, issuer, subject, callback) {
-    var callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer, subject)
+  // TODO remove once feasible
+  function callLegacyRegistry (address, callback) {
+    const rpcUrl = `https://ropsten.infura.io/${infuraKey}`
+    if (!address) return callback(null)
     return http({
       uri: rpcUrl,
+      accept: 'application/json',
+      data: {
+        method: 'eth_call',
+        params: [
+          {to: '0xb9C1598e24650437a3055F7f66AC1820c419a679', data: (getAttributesData + address.slice(2))},
+          'latest'
+        ],
+        id: 1,
+        jsonrpc: '2.0'
+      }
+    }, (error, response) => {
+      if (error) return callback(error)
+      const hexHash = response.result.slice(130).slice(0, 68)
+      return callback(null, toBase58(hexHash))
+    })
+  }
+
+  function callRegistry (registrationIdentifier, issuerId, subjectId, callback) {
+    const issuer = eaeDecode(issuerId)
+    const subject = eaeDecode(subjectId)
+    if (issuer.network !== subject.network) {
+      throw new Error('Issuer and subject must be on the same network')
+    }
+    if (!networks[issuer.network]) {
+      throw new Error(`Network id ${issuer.network} is not configured`)
+    }
+    const rpcUrl = networks[issuer.network].rpcUrl
+    const registryAddress = networks[issuer.network].registry
+    const callString = encodeFunctionCall(functionSignature, registrationIdentifier, issuer.address, subject.address)
+    return http({
+      uri: `${rpcUrl}/${infuraKey}`,
       accept: 'application/json',
       data: {
         method: 'eth_call',
@@ -103,15 +167,21 @@ function UportLite (opts = {}) {
     return http({uri: `${ipfsGw}${ipfsHash}`}, callback)
   }
 
-  function get(issuer, callback, subjectAddress, registrationIdentifier) {
+  function get (issuer, callback, subjectAddress, registrationIdentifier = 'uPortProfileIPFS1220') {
     if (!issuer) return callback(null)
-    var subject = subjectAddress || issuer
-    var registrationIdentifier = registrationIdentifier || "uPortProfileIPFS1220"
+    const subject = subjectAddress || issuer
 
-    return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
-      if (error) return callback(error)
-      fetchIpfs(ipfsHash, callback)
-    })
+    if (issuer.match(/0x[0-9a-fA-F]{40}/)) {
+      return callLegacyRegistry(issuer, (error, ipfsHash) => {
+        if (error) return callback(error)
+        fetchIpfs(ipfsHash, callback)
+      })
+    } else {
+      return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
+        if (error) return callback(error)
+        fetchIpfs(ipfsHash, callback)
+      })
+    }
   }
   return get
 }
