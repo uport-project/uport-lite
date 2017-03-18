@@ -316,8 +316,12 @@ const defaultNetworks = {
     rpcUrl: 'https://ropsten.infura.io'
   },
   '0x2a': {
-    registry: '',
+    registry: '0xeA8aC9cF5c3D02cfc30F65C04eD921D713062745',
     rpcUrl: 'https://kovan.infura.io'
+  // },
+  // '0x16B2': {
+  //   registry: '',
+  //   rpcUrl: 'https://infuranet.infura.io'
   }
 }
 
