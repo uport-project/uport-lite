@@ -70,7 +70,7 @@ const defaultNetworks = {
     rpcUrl: 'https://ropsten.infura.io'
   },
   '0x2a': {
-    registry: '0xeA8aC9cF5c3D02cfc30F65C04eD921D713062745',
+    registry: '0x5f8e9351dc2d238fb878b6ae43aa740d62fc9758',
     rpcUrl: 'https://kovan.infura.io'
   // },
   // '0x16B2': {
@@ -87,6 +87,7 @@ function UportLite (opts = {}) {
   const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const networks = opts.networks ? Object.assign({}, defaultNetworks, opts.networks) : defaultNetworks
+  
   function asciiToHex (string, delim) {
     return string.split('').map(function (c) {
       return ('0' + c.charCodeAt(0).toString(16)).slice(-2)

@@ -9,7 +9,7 @@ const registry = UportLite({
 })
 
 // uPortProfileIPFS1220 => 75506f727450726f66696c654950465331323230
-//"uPortProfileIPFS1220","0xb08e78b8E17dC2874818d7F49055aBf08Ee9977D","0xB0F288F8EFA511962E11E37488DB0D2BCC7A5F304B1D4F3977EB0EC65814A52C"
+//"uPortProfileIPFS1220","0x39F79c6511940bB54Ca69a659c929DdD5a4c679F","0x39F79c6511940bB54Ca69a659c929DdD5a4c679F"
 
 it('finds valid default profile for address', () => {
   return new Promise((resolve, reject) => {
@@ -24,6 +24,7 @@ it('finds valid default profile for address', () => {
 
 it('finds valid default profile on private chain', () => {
   return new Promise((resolve, reject) => {
+
     registry('5A8bRX9ShMLm7bXPn9SVX6hC7SG1HURF3tknToB', (error, profile) => {
       if (error) return reject(error)
       resolve(profile)
@@ -35,6 +36,7 @@ it('finds valid default profile on private chain', () => {
 
 it('finds valid advanced profile using new API', () => {
   return new Promise((resolve, reject) => {
+
     registry('2oVdmcz7BkWozm2JE4hHixRV8s5y3STqhPG', (error, profile) => {
       if (error) return reject(error)
       resolve(profile)
