@@ -22,6 +22,17 @@ it('finds valid default profile for address', () => {
   })
 })
 
+it('finds valid default profile for address on kovan', () => {
+  return new Promise((resolve, reject) => {
+    registry('3511FZbtXjJbTHYz3NnLAXZwjgFVQq3tCfH', (error, profile) => {
+      if (error) return reject(error)
+      resolve(profile)
+    })
+  }).then(profile => {
+    return expect(profile.publicKey).toEqual('0x0466aa9f309dfb7624ae3b0a6b6ad6163145d977e088679252289816b90b2e5e9d58ea42a4b79f255731660d0c3e319a4fa54a6f1a73a88fd3c1b48a084269ab48')
+  })
+})
+
 it('finds valid default profile on private chain', () => {
   return new Promise((resolve, reject) => {
 
