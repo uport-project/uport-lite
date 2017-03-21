@@ -49,9 +49,9 @@ function registryEncodingToIPFS(hexStr) {
 }
 
 function UportLite (opts = {}) {
-  const registryAddress = opts.registryAddress || '0x41566e3a081f5032bdcad470adb797635ddfe1f0'
+  const registryAddress = opts.registryAddress || '0x5f8e9351dc2d238fb878b6ae43aa740d62fc9758'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
-  const rpcUrl = opts.rpcUrl || 'https://ropsten.infura.io/uport-lite-library'
+  const rpcUrl = opts.rpcUrl || 'https://kovan.infura.io/uport-lite-library'
 
   function asciiToHex (string, delim) {
      return string.split("").map(function(c) {
