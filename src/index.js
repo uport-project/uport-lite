@@ -49,7 +49,7 @@ function registryEncodingToIPFS (hexStr) {
 }
 
 // to avoid adding further dependencies we are not verifying checksum
-export function eaeDecode (encoded) {
+function eaeDecode (encoded) {
   const data = base58.decode(encoded)
   const netLength = data.length - 24
   const network = data.slice(1, netLength)
