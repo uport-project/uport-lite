@@ -346,6 +346,7 @@ function UportLite() {
       }
     }, function (error, response) {
       if (error) return callback(error);
+      if (response.error) return callback(response.error);
       var hexHash = response.result.slice(130).slice(0, 68);
       return callback(null, toBase58(hexHash));
     });
@@ -374,6 +375,7 @@ function UportLite() {
       }
     }, function (error, response) {
       if (error) return callback(error);
+      if (response.error) return callback(response.error);
       if (response.result == 0) return callback(error);
       return callback(null, registryEncodingToIPFS(response.result));
     });

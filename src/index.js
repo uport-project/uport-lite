@@ -131,6 +131,7 @@ function UportLite (opts = {}) {
       }
     }, (error, response) => {
       if (error) return callback(error)
+      if (response.error) return callback(response.error)
       const hexHash = response.result.slice(130).slice(0, 68)
       return callback(null, toBase58(hexHash))
     })
@@ -162,6 +163,7 @@ function UportLite (opts = {}) {
       }
     }, (error, response) => {
       if (error) return callback(error)
+      if (response.error) return callback(response.error)
       if (response.result == 0) return callback(error)
       return callback(null, registryEncodingToIPFS(response.result))
     })
