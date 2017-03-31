@@ -658,9 +658,9 @@ balanced-match@^0.4.1:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-0.4.2.tgz#cb3f3e3c732dc0f01ee70b403f302e61d7709838"
 
-base-x-bytearray@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/base-x-bytearray/-/base-x-bytearray-0.1.0.tgz#8c2c5052aeab25207b21d866e78c1b59ab65ec2a"
+base-x-bytearray@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/base-x-bytearray/-/base-x-bytearray-0.1.2.tgz#23faa9ac44fc774762d257082efbb8e5bae02dfb"
 
 base64-js@^1.0.2:
   version "1.2.0"
