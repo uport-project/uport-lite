@@ -1,10 +1,10 @@
 # Light weight library for fetching public uPort profiles
 
-A uPort is an ethereum address representing an identity of a person, thing or other entitity. We are using the NID address encoding scheme to support safe use of multiple networks.
+A uPort is an ethereum address representing an identity of a person, thing or other entitity. We are using the [MNID address encoding](https://github.com/uport-project/mnid) scheme to safely support multiple networks.
 
 A public profile is stored on ipfs at a hash registered in the [uPortRegistry](https://github.com/ConsenSys/uport-registry).
 
-This library aims to let developers look up a profile for a given ethereum address and nothing else. It is designed to be tiny (<3k with all dependencies),
+This library aims to let developers look up a profile for a given ethereum address and nothing else. It is designed to be tiny,
 so you can easily add uport functionality to non Ethereum apps.
 
 ## Use
