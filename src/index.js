@@ -1,6 +1,6 @@
 var BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-var base58 = require('base-x-bytearray')(BASE58)
-var hex = require('base-x-bytearray')('0123456789abcdef')
+var base58 = require('base-x')(BASE58)
+var hex = require('base-x')('0123456789abcdef')
 
 const XMLHttpRequest = (typeof window !== 'undefined') ? window.XMLHttpRequest : require('xmlhttprequest').XMLHttpRequest
 
