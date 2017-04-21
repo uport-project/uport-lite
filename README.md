@@ -1,10 +1,10 @@
 # Light weight library for fetching public uPort profiles
 
-A uPort is an ethereum address representing an identity of a person, thing or other entitity.
+A uPort is an ethereum address representing an identity of a person, thing or other entitity. We are using the [MNID address encoding](https://github.com/uport-project/mnid) scheme to safely support multiple networks.
 
 A public profile is stored on ipfs at a hash registered in the [uPortRegistry](https://github.com/ConsenSys/uport-registry).
 
-This library aims to let developers look up a profile for a given ethereum address and nothing else. It is designed to be tiny (<3k with all dependencies),
+This library aims to let developers look up a profile for a given ethereum address and nothing else. It is designed to be tiny,
 so you can easily add uport functionality to non Ethereum apps.
 
 ## Use
@@ -17,7 +17,7 @@ import UportLite from 'uport-lite'
 // UportLite is just a function returning a function. It is not a Class so don't use `new`
 const registry = UportLite()
 
-registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) => {
+registry('2oVdmcz7BkWozm2JE4hHixRV8s5y3STqhPG', (error, profile) => {
   console.log(profile)
 })
 ```
@@ -28,12 +28,17 @@ You can configure it passing options to the function:
 import UportLite from 'uport-lite'
 
 const registry = UportLite({
-  registryAddress: '0x022f41a91cb30d6a20ffcfde3f84be6c1fa70d60',
   ipfsGw: 'https://ipfs.infura.io/ipfs/',
-  rpcUrl: 'https://mainnet.infura.io/INFURA_API_KEY'
+  infuraKey: 'INFURA_API_KEY',
+  networks: {
+    '0x94365e3b': {
+      rpcUrl: 'https://private.chain/rpc',
+      address: '0x0101....'
+    }
+  }
 })
 
-registry('0x3b2631d8e15b145fd2bf99fc5f98346aecdc394c', (error, profile) => {
+registry('5A8bRWU3F7j3REx3vkJWxdjQPp4tqmxFPmab1Tr', (error, profile) => {
   console.log(profile)
 })
 ```
