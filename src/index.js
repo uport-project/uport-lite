@@ -76,10 +76,11 @@ const defaultNetworks = {
   // '0x16B2': {
   //   registry: '',
   //   rpcUrl: 'https://infuranet.infura.io'
-},
-'0x4': {
-  registry: '0xcF7e47Feac49dF99f071e0BB3BA94f3bEC8B8Fe6',
-  rpcUrl: 'https://rinkeby.infura.io'
+  },
+  '0x4': {
+    registry: '0xcF7e47Feac49dF99f071e0BB3BA94f3bEC8B8Fe6',
+    rpcUrl: 'https://rinkeby.infura.io'
+  }
 }
 
 function toBase58 (hexStr) {
