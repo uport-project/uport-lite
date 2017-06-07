@@ -76,6 +76,10 @@ const defaultNetworks = {
   // '0x16B2': {
   //   registry: '',
   //   rpcUrl: 'https://infuranet.infura.io'
+  },
+  '0x4': {
+    registry: '0x2cc31912b2b0f3075a87b3640923d45a26cef3ee',
+    rpcUrl: 'https://rinkeby.infura.io'
   }
 }
 
@@ -87,7 +91,7 @@ function UportLite (opts = {}) {
   const infuraKey = opts.infuraKey || 'uport-lite-library'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const networks = opts.networks ? Object.assign({}, defaultNetworks, opts.networks) : defaultNetworks
-  
+
   function asciiToHex (string, delim) {
     return string.split('').map(function (c) {
       return ('0' + c.charCodeAt(0).toString(16)).slice(-2)
