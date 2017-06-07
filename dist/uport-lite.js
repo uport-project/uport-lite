@@ -2309,6 +2309,10 @@ var defaultNetworks = {
     // '0x16B2': {
     //   registry: '',
     //   rpcUrl: 'https://infuranet.infura.io'
+  },
+  '0x4': {
+    registry: '0x2cc31912b2b0f3075a87b3640923d45a26cef3ee',
+    rpcUrl: 'https://rinkeby.infura.io'
   }
 };
 
