@@ -145,10 +145,12 @@ function UportLite (opts = {}) {
     const issuer = eaeDecode(issuerId)
     const subject = eaeDecode(subjectId)
     if (issuer.network !== subject.network) {
-      throw new Error('Issuer and subject must be on the same network')
+      callback(new Error('Issuer and subject must be on the same network'))
+      return
     }
     if (!networks[issuer.network]) {
-      throw new Error(`Network id ${issuer.network} is not configured`)
+      callback(new Error(`Network id ${issuer.network} is not configured`))
+      return
     }
     const rpcUrl = networks[issuer.network].rpcUrl
     const registryAddress = networks[issuer.network].registry
