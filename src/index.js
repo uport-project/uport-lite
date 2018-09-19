@@ -38,8 +38,12 @@ function http (opts, callback) {
 
   if (options.data) {
     request.setRequestHeader('Content-Type', `application/json`)
+    console.log('REQUEST')
+    console.log(request)
     request.send(JSON.stringify(options.data))
   } else {
+    console.log('REQUEST')
+    console.log(request)
     request.send()
   }
 }
@@ -186,13 +190,19 @@ function UportLite (opts = {}) {
 
     if (issuer.match(/0x[0-9a-fA-F]{40}/)) {
       return callLegacyRegistry(issuer, (error, ipfsHash) => {
+        console.log(`Error ${error}`)
         if (error) return callback(error)
-        fetchIpfs(ipfsHash, callback)
+        console.log(`Hash ${ipfsHash}`)
+        const response = fetchIpfs(ipfsHash, callback)
+        console.log('RESPONSE')
+        console.log(response)
       })
     } else {
       return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
         if (error) return callback(error)
-        fetchIpfs(ipfsHash, callback)
+        const response = fetchIpfs(ipfsHash, callback)
+        console.log('RESPONSE')
+        console.log(response)
       })
     }
   }
