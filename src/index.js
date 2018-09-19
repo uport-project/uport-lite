@@ -196,6 +196,7 @@ function UportLite (opts = {}) {
         const response = fetchIpfs(ipfsHash, callback)
         console.log('RESPONSE')
         console.log(response)
+        return response
       })
     } else {
       return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
@@ -203,6 +204,7 @@ function UportLite (opts = {}) {
         const response = fetchIpfs(ipfsHash, callback)
         console.log('RESPONSE')
         console.log(response)
+        return response
       })
     }
   }
