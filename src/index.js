@@ -26,6 +26,8 @@ function http (opts, callback) {
           console.log(typeof (request.responseText))
           callback(null, JSON.parse(request.responseText))
         } catch (jsonError) {
+          console.log('()()()() JSONERRORR ()()()()')
+          console.log(jsonError)
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
       }
