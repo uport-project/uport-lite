@@ -15,6 +15,8 @@ function http (opts, callback) {
   console.log('OPTS')
   console.log(opts)
   request.onreadystatechange = () => {
+    console.log('HERE')
+    console.log(request)
     if (request.readyState === 4 && request.timeout !== 1) {
       if (request.status !== 200) {
         callback(new Error(`[uport-lite] status ${request.status}: ${request.responseText}`))
@@ -44,7 +46,7 @@ function http (opts, callback) {
     request.send(JSON.stringify(options.data))
   } else {
     console.log('REQUEST')
-    console.log(request.getRequestHeader())
+    console.log(request)
     request.send()
   }
 }
