@@ -16,13 +16,14 @@ function http (opts, callback) {
   console.log(opts)
   request.onreadystatechange = () => {
     if (request.readyState === 4 && request.timeout !== 1) {
+      console.log((request.readyState === 4 && request.timeout !== 1))
       if (request.status !== 200) {
         callback(new Error(`[uport-lite] status ${request.status}: ${request.responseText}`))
       } else {
         try {
           console.log('HERE')
           console.log(request.responseText)
-          callback(null, request.responseText)
+          callback(null, JSON.parse(request.responseText))
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
