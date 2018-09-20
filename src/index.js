@@ -22,8 +22,9 @@ function http (opts, callback) {
       } else {
         try {
           console.log('HERE')
-          console.log(JSON.parse(request.responseText))
-          callback(null, JSON.parse(request.responseText))
+          const profile = JSON.parse(request.responseText)
+          console.log(profile)
+          callback(null, profile)
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
