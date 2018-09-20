@@ -22,7 +22,7 @@ function http (opts, callback) {
         try {
           console.log('HERE')
           console.log(request.responseText)
-          callback(null, JSON.parse(request.responseText))
+          callback(null, request.responseText)
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
@@ -41,8 +41,6 @@ function http (opts, callback) {
 
   if (options.data) {
     request.setRequestHeader('Content-Type', `application/json`)
-    console.log('REQUEST')
-    console.log(request.getRequestHeader())
     request.send(JSON.stringify(options.data))
   } else {
     console.log('REQUEST')
