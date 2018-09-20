@@ -45,8 +45,6 @@ function http (opts, callback) {
     request.setRequestHeader('Content-Type', `application/json`)
     request.send(JSON.stringify(options.data))
   } else {
-    console.log('REQUEST')
-    console.log(request)
     request.send()
   }
 }
