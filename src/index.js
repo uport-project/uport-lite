@@ -21,7 +21,7 @@ function http (opts, callback) {
         callback(new Error(`[uport-lite] status ${request.status}: ${request.responseText}`))
       } else {
         try {
-          console.log('HERE')
+          console.log('CALLING CALLBACK!!!')
           const profile = JSON.parse(request.responseText)
           console.log(profile)
           callback(null, profile)
@@ -183,6 +183,8 @@ function UportLite (opts = {}) {
   }
 
   function fetchIpfs (ipfsHash, callback) {
+    console.log('Fetch IPFS!!!!!')
+    console.log((!ipfsHash || ipfsHash === '0x'))
     if (!ipfsHash || ipfsHash === '0x') return callback()
     return http({uri: `${ipfsGw}${ipfsHash}`}, callback)
   }
@@ -203,6 +205,10 @@ function UportLite (opts = {}) {
       })
     } else {
       return callRegistry(registrationIdentifier, issuer, subject, (error, ipfsHash) => {
+        console.log('========')
+        console.log(error)
+        console.log(ipfsHash)
+        console.log('=========')
         if (error) return callback(error)
         fetchIpfs(ipfsHash, callback)
       })
