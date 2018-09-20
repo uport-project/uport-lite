@@ -22,7 +22,7 @@ function http (opts, callback) {
       } else {
         try {
           console.log('CALLING CALLBACK!!!')
-          console.log(request.responseTest)
+          console.log(request.responseText)
           console.log(typeof (request.responseText))
           const issProfile = JSON.parse(request.responseText)
           console.log(issProfile)
