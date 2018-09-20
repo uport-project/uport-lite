@@ -12,7 +12,8 @@ const getAttributesData = '0x446d5aa4000000000000000000000000'
 function http (opts, callback) {
   const request = new XMLHttpRequest() // eslint-disable-line
   const options = opts || {}
-
+  console.log('OPTS')
+  console.log(opts)
   request.onreadystatechange = () => {
     if (request.readyState === 4 && request.timeout !== 1) {
       if (request.status !== 200) {
@@ -39,11 +40,11 @@ function http (opts, callback) {
   if (options.data) {
     request.setRequestHeader('Content-Type', `application/json`)
     console.log('REQUEST')
-    console.log(request)
+    console.log(request.getRequestHeader())
     request.send(JSON.stringify(options.data))
   } else {
     console.log('REQUEST')
-    console.log(request)
+    console.log(request.getRequestHeader())
     request.send()
   }
 }
