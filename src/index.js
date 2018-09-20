@@ -22,7 +22,7 @@ function http (opts, callback) {
       } else {
         try {
           console.log('HERE')
-          console.log(request.responseText)
+          console.log(JSON.parse(request.responseText))
           callback(null, JSON.parse(request.responseText))
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
