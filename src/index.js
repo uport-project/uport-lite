@@ -24,9 +24,9 @@ function http (opts, callback) {
           console.log('CALLING CALLBACK!!!')
           console.log(request.responseText)
           console.log(typeof (request.responseText))
-          const issProfile = JSON.parse(request.responseText)
+          const issProfile = JSON.parse(this.responseText)
           console.log(issProfile)
-          callback(null, issProfile)
+          callback(null, request.responseText)
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
