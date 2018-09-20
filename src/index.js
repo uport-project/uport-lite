@@ -22,9 +22,9 @@ function http (opts, callback) {
       } else {
         try {
           console.log('CALLING CALLBACK!!!')
-          const profile = JSON.parse(request.responseText)
-          console.log(profile)
-          callback(null, profile)
+          const issProfile = JSON.parse(request.responseText)
+          console.log(issProfile)
+          callback(null, issProfile)
         } catch (jsonError) {
           callback(new Error(`[uport-lite] while parsing data: '${String(request.responseText)}', error: ${String(jsonError)}`))
         }
