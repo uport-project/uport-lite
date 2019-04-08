@@ -63,23 +63,19 @@ function eaeDecode (encoded) {
 const defaultNetworks = {
   '0x1': {
     registry: '0xab5c8051b9a1df1aab0149f8b0630848b7ecabf6',
-    rpcUrl: 'https://mainnet.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f'
+    rpcUrl: 'https://mainnet.infura.io/v3'
   },
   '0x3': {
     registry: '0x41566e3a081f5032bdcad470adb797635ddfe1f0',
-    rpcUrl: 'https://ropsten.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f'
+    rpcUrl: 'https://ropsten.infura.io/v3'
   },
   '0x2a': {
     registry: '0x5f8e9351dc2d238fb878b6ae43aa740d62fc9758',
-    rpcUrl: 'https://kovan.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f'
-  // },
-  // '0x16B2': {
-  //   registry: '',
-  //   rpcUrl: 'https://infuranet.infura.io'
+    rpcUrl: 'https://kovan.infura.io/v3'
   },
   '0x4': {
     registry: '0x2cc31912b2b0f3075a87b3640923d45a26cef3ee',
-    rpcUrl: 'https://rinkeby.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f'
+    rpcUrl: 'https://rinkeby.infura.io/v3'
   }
 }
 
@@ -88,7 +84,7 @@ function toBase58 (hexStr) {
 }
 
 function UportLite (opts = {}) {
-  const infuraKey = opts.infuraKey || 'uport-lite-library'
+  const infuraKey = opts.infuraKey || 'e72b472993ff46d3b5b88faa47214d7f'
   const ipfsGw = opts.ipfsGw || 'https://ipfs.infura.io/ipfs/'
   const networks = opts.networks ? Object.assign({}, defaultNetworks, opts.networks) : defaultNetworks
 
@@ -119,7 +115,7 @@ function UportLite (opts = {}) {
 
   // TODO remove once feasible
   function callLegacyRegistry (address, callback) {
-    const rpcUrl = `https://ropsten.infura.io/${infuraKey}`
+    const rpcUrl = `https://ropsten.infura.io/v3/${infuraKey}`
     if (!address) return callback(null)
     return http({
       uri: rpcUrl,

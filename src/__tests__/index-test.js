@@ -3,7 +3,7 @@ const registry = UportLite({
   networks: {
     '0x94365e3b': {
       registry: '0x41566e3a081f5032bdcad470adb797635ddfe1f0',
-      rpcUrl: 'https://ropsten.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f'
+      rpcUrl: 'https://ropsten.infura.io/v3'
     }
   }
 })
