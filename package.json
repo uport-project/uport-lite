@@ -1,6 +1,6 @@
 {
   "name": "uport-lite",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Lightweight library for looking up public profiles on uport-registry",
   "main": "lib/index.js",
   "repository": {
