@@ -114,10 +114,10 @@ function UportLite (opts = {}) {
 
   // TODO remove once feasible
   function callLegacyRegistry (address, callback) {
-    const rpcUrl = `https://ropsten.infura.io/v3/e72b472993ff46d3b5b88faa47214d7f`
+    const ropstenRpcUrl = networks['0x3'].rpcUrl
     if (!address) return callback(null)
     return http({
-      uri: rpcUrl,
+      uri: ropstenRpcUrl,
       accept: 'application/json',
       data: {
         method: 'eth_call',
